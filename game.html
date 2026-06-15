@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Flappy Dino Skull</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #0f1a0a;
+      font-family: 'Georgia', serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: 100vh;
+      color: #D4941A;
+    }
+
+    header {
+      width: 100%;
+      background: #060e04;
+      border-bottom: 2px solid #3a5520;
+      padding: 0.8rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    header h1 {
+      font-size: 1.3rem;
+      letter-spacing: 0.12em;
+      color: #D4941A;
+    }
+    header a {
+      font-size: 0.78rem;
+      color: #6a8a3a;
+      text-decoration: none;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      border: 1px solid #3a5520;
+      padding: 0.3rem 0.7rem;
+      border-radius: 2px;
+    }
+    header a:hover { color: #D4941A; border-color: #D4941A; }
+
+    #game-area {
+      margin-top: 2rem;
+      position: relative;
+    }
+
+    canvas {
+      display: block;
+      border: 3px solid #3a5520;
+      border-radius: 4px;
+      background: #0f2a10;
+      cursor: pointer;
+    }
+
+    #ui-overlay {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+    }
+
+    #start-screen, #game-over-screen {
+      background: rgba(6,14,4,0.88);
+      border: 2px solid #8B5E1A;
+      border-radius: 8px;
+      padding: 2rem 3rem;
+      text-align: center;
+      pointer-events: all;
+    }
+
+    #start-screen h2, #game-over-screen h2 {
+      font-size: 2rem;
+      color: #D4941A;
+      margin-bottom: 0.5rem;
+    }
+
+    #start-screen p, #game-over-screen p {
+      font-size: 0.95rem;
+      color: #A89060;
+      margin-bottom: 1.2rem;
+      line-height: 1.6;
+    }
+
+    .game-btn {
+      background: #8B5E1A;
+      color: #F2E8D0;
+      border: 2px solid #D4941A;
+      padding: 0.7rem 2rem;
+      font-size: 1rem;
+      font-family: 'Georgia', serif;
+      border-radius: 4px;
+      cursor: pointer;
+      letter-spacing: 0.08em;
+      transition: background 0.2s, transform 0.1s;
+    }
+    .game-btn:hover { background: #D4941A; color: #0f1a0a; transform: scale(1.04); }
+
+    #score-display {
+      position: absolute;
+      top: 14px; right: 18px;
+      font-size: 1.5rem;
+      color: #D4941A;
+      font-weight: bold;
+      text-shadow: 0 0 8px rgba(212,148,26,0.5);
+      pointer-events: none;
+    }
+
+    #best-display {
+      position: absolute;
+      top: 14px; left: 18px;
+      font-size: 0.8rem;
+      color: #6a8a3a;
+      pointer-events: none;
+      letter-spacing: 0.05em;
+    }
+
+    #final-score {
+      font-size: 2.5rem;
+      color: #D4941A;
+      font-weight: bold;
+      margin: 0.5rem 0;
+    }
+
+    #instructions {
+      margin-top: 1.5rem;
+      font-size: 0.75rem;
+      color: #4a6a2a;
+      letter-spacing: 0.08em;
+    }
+
+    #game-over-screen { display: none; }
+
+    #difficulty-row {
+      display: flex; gap: 0.5rem; justify-content: center; margin-bottom: 1rem;
+    }
+    .diff-btn {
+      background: transparent;
+      border: 1px solid #4a6a2a;
+      color: #6a8a3a;
+      padding: 0.3rem 0.8rem;
+      font-family: 'Georgia', serif;
+      font-size: 0.82rem;
+      border-radius: 2px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .diff-btn.active, .diff-btn:hover {
+      background: #4a6a2a;
+      color: #D4941A;
+      border-color: #D4941A;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>🦴 Flappy Dino Skull</h1>
+  <a href="professional.html">← Back to Spinosaurus</a>
+</header>
+
+<div id="game-area">
+  <canvas id="gameCanvas" width="480" height="580"></canvas>
+
+  <div id="score-display">0</div>
+  <div id="best-display">Best: 0</div>
+
+  <div id="ui-overlay">
+    <div id="start-screen">
+      <h2>🦴 Flappy Dino Skull</h2>
+      <p>Pilot a Spinosaurus skull through<br>an ancient Cretaceous river.</p>
+      <div id="difficulty-row">
+        <button class="diff-btn active" onclick="setDiff('easy',this)">Easy</button>
+        <button class="diff-btn" onclick="setDiff('normal',this)">Normal</button>
+        <button class="diff-btn" onclick="setDiff('hard',this)">Paleo Mode</button>
+      </div>
+      <button class="game-btn" onclick="startGame()">▶ Start</button>
+      <p style="margin-top:1rem; font-size:0.78rem;">Press <strong>Space</strong> or tap to flap</p>
+    </div>
+
+    <div id="game-over-screen">
+      <h2>Fossilized!</h2>
+      <p>Your skull hit an obstacle.</p>
+      <div id="final-score">0</div>
+      <p id="best-msg" style="font-size:0.82rem; color:#6a8a3a; margin-bottom:1rem;"></p>
+      <button class="game-btn" onclick="restartGame()">↻ Try Again</button>
+    </div>
+  </div>
+</div>
+
+<div id="instructions">SPACE · CLICK · TAP — to flap</div>
+
+<script>
+  const canvas = document.getElementById('gameCanvas');
+  const ctx = canvas.getContext('2d');
+  const scoreEl = document.getElementById('score-display');
+  const bestEl = document.getElementById('best-display');
+  const startScreen = document.getElementById('start-screen');
+  const gameOverScreen = document.getElementById('game-over-screen');
+  const finalScoreEl = document.getElementById('final-score');
+  const bestMsgEl = document.getElementById('best-msg');
+
+  // Game state
+  let skull, pipes, score, bestScore, gameState, animId, frameCount;
+  let difficulty = { gravity: 0.38, flapStrength: -7.5, pipeSpeed: 2.4, gap: 165 };
+
+  function setDiff(level, btn) {
+    document.querySelectorAll('.diff-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    if (level === 'easy')   difficulty = { gravity: 0.32, flapStrength: -7,   pipeSpeed: 2.0, gap: 185 };
+    if (level === 'normal') difficulty = { gravity: 0.38, flapStrength: -7.5, pipeSpeed: 2.4, gap: 165 };
+    if (level === 'hard')   difficulty = { gravity: 0.46, flapStrength: -8,   pipeSpeed: 3.2, gap: 140 };
+  }
+
+  // DRAW SKULL
+  function drawSkull(x, y, size, angle) {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate(angle);
+
+    const s = size;
+
+    // Cranium
+    ctx.fillStyle = '#D4C090';
+    ctx.beginPath();
+    ctx.ellipse(0, -s*0.15, s*0.52, s*0.42, 0, 0, Math.PI*2);
+    ctx.fill();
+    ctx.strokeStyle = '#8B7040';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // Snout (elongated Spino-style)
+    ctx.fillStyle = '#C8B080';
+    ctx.beginPath();
+    ctx.moveTo(s*0.35, -s*0.1);
+    ctx.lineTo(s*0.95, -s*0.02);
+    ctx.lineTo(s*0.95, s*0.12);
+    ctx.lineTo(s*0.35, s*0.18);
+    ctx.closePath();
+    ctx.fill();
+    ctx.strokeStyle = '#8B7040';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+
+    // Teeth
+    ctx.fillStyle = '#F0EAD0';
+    const teethX = [0.42, 0.54, 0.66, 0.77, 0.87];
+    teethX.forEach(tx => {
+      ctx.beginPath();
+      ctx.moveTo(s*tx, s*0.17);
+      ctx.lineTo(s*(tx+0.04), s*0.17);
+      ctx.lineTo(s*(tx+0.02), s*0.28);
+      ctx.closePath();
+      ctx.fill();
+    });
+
+    // Eye socket
+    ctx.fillStyle = '#1a1a0a';
+    ctx.beginPath();
+    ctx.ellipse(s*0.12, -s*0.12, s*0.14, s*0.12, 0, 0, Math.PI*2);
+    ctx.fill();
+    ctx.strokeStyle = '#8B7040';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+
+    // Eye glint
+    ctx.fillStyle = 'rgba(255,220,80,0.3)';
+    ctx.beginPath();
+    ctx.arc(s*0.07, -s*0.15, s*0.04, 0, Math.PI*2);
+    ctx.fill();
+
+    // Nasal opening
+    ctx.fillStyle = '#1a1a0a';
+    ctx.beginPath();
+    ctx.ellipse(s*0.38, -s*0.08, s*0.06, s*0.05, -0.3, 0, Math.PI*2);
+    ctx.fill();
+
+    // Crack details
+    ctx.strokeStyle = 'rgba(100,80,30,0.5)';
+    ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(-s*0.1, -s*0.35); ctx.lineTo(s*0.05, -s*0.2); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(-s*0.25, -s*0.1); ctx.lineTo(-s*0.15, s*0.05); ctx.stroke();
+
+    ctx.restore();
+  }
+
+  // DRAW PIPES (rocky columns)
+  function drawPipe(x, topH, botY, w) {
+    const grd = ctx.createLinearGradient(x, 0, x + w, 0);
+    grd.addColorStop(0, '#2a4a18');
+    grd.addColorStop(0.4, '#3a6a22');
+    grd.addColorStop(1, '#1a3010');
+
+    // Top pipe
+    ctx.fillStyle = grd;
+    ctx.fillRect(x, 0, w, topH);
+    ctx.strokeStyle = '#4a8a28';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(x, 0, w, topH);
+
+    // Top pipe cap
+    ctx.fillStyle = '#4a8a28';
+    ctx.fillRect(x - 5, topH - 20, w + 10, 20);
+    ctx.strokeRect(x - 5, topH - 20, w + 10, 20);
+
+    // Fossil textures on top pipe
+    ctx.fillStyle = 'rgba(255,255,200,0.08)';
+    [0.3, 0.6].forEach(pct => {
+      ctx.beginPath();
+      ctx.arc(x + w*0.5, topH * pct, 6, 0, Math.PI*2);
+      ctx.fill();
+    });
+
+    // Bottom pipe
+    const botH = canvas.height - botY;
+    ctx.fillStyle = grd;
+    ctx.fillRect(x, botY, w, botH);
+    ctx.strokeStyle = '#4a8a28';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(x, botY, w, botH);
+
+    // Bottom pipe cap
+    ctx.fillStyle = '#4a8a28';
+    ctx.fillRect(x - 5, botY, w + 10, 20);
+    ctx.strokeRect(x - 5, botY, w + 10, 20);
+  }
+
+  // BACKGROUND
+  function drawBackground() {
+    // Sky gradient
+    const sky = ctx.createLinearGradient(0, 0, 0, canvas.height);
+    sky.addColorStop(0, '#0a1505');
+    sky.addColorStop(0.5, '#0f2a10');
+    sky.addColorStop(1, '#082008');
+    ctx.fillStyle = sky;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // River shimmer at bottom
+    ctx.fillStyle = 'rgba(20,60,40,0.3)';
+    ctx.fillRect(0, canvas.height - 60, canvas.width, 60);
+
+    // Animated ripples
+    const t = frameCount * 0.02;
+    ctx.strokeStyle = 'rgba(40,120,80,0.15)';
+    ctx.lineWidth = 1;
+    for (let i = 0; i < 5; i++) {
+      const rx = ((t * 40 + i * 90) % (canvas.width + 80)) - 40;
+      ctx.beginPath();
+      ctx.ellipse(rx, canvas.height - 30, 30, 6, 0, 0, Math.PI*2);
+      ctx.stroke();
+    }
+
+    // Distant ferns/silhouettes
+    ctx.fillStyle = 'rgba(10,30,10,0.6)';
+    [60, 150, 270, 380, 440].forEach(fx => {
+      ctx.beginPath();
+      ctx.moveTo(fx, canvas.height - 55);
+      ctx.lineTo(fx - 15, canvas.height - 120);
+      ctx.lineTo(fx, canvas.height - 100);
+      ctx.lineTo(fx + 10, canvas.height - 135);
+      ctx.lineTo(fx + 5, canvas.height - 55);
+      ctx.fill();
+    });
+  }
+
+  function initGame() {
+    skull = {
+      x: 90, y: canvas.height / 2,
+      vy: 0,
+      size: 26,
+      scored: false
+    };
+    pipes = [];
+    score = 0;
+    frameCount = 0;
+    gameState = 'playing';
+    scoreEl.textContent = '0';
+  }
+
+  function spawnPipe() {
+    const gap = difficulty.gap;
+    const minTop = 70;
+    const maxTop = canvas.height - gap - 70;
+    const topH = Math.random() * (maxTop - minTop) + minTop;
+    pipes.push({ x: canvas.width + 10, topH, botY: topH + gap, w: 62, scored: false });
+  }
+
+  function update() {
+    frameCount++;
+    skull.vy += difficulty.gravity;
+    skull.y += skull.vy;
+
+    // Clamp angle
+    skull.angle = Math.max(-0.5, Math.min(0.8, skull.vy * 0.06));
+
+    // Spawn pipes
+    if (frameCount === 1 || (frameCount % 90 === 0)) spawnPipe();
+
+    // Move pipes
+    pipes.forEach(p => p.x -= difficulty.pipeSpeed);
+    pipes = pipes.filter(p => p.x > -80);
+
+    // Score
+    pipes.forEach(p => {
+      if (!p.scored && p.x + p.w < skull.x) {
+        p.scored = true;
+        score++;
+        scoreEl.textContent = score;
+      }
+    });
+
+    // Collision
+    const hitR = skull.size * 0.72;
+    // Floor / ceiling
+    if (skull.y - skull.size * 0.4 < 0 || skull.y + skull.size * 0.4 > canvas.height) {
+      endGame(); return;
+    }
+    // Pipe collision
+    for (const p of pipes) {
+      if (skull.x + hitR > p.x + 5 && skull.x - hitR < p.x + p.w - 5) {
+        if (skull.y - hitR < p.topH || skull.y + hitR > p.botY) {
+          endGame(); return;
+        }
+      }
+    }
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawBackground();
+    pipes.forEach(p => drawPipe(p.x, p.topH, p.botY, p.w));
+    drawSkull(skull.x, skull.y, skull.size, skull.angle || 0);
+  }
+
+  function gameLoop() {
+    if (gameState !== 'playing') return;
+    update();
+    draw();
+    animId = requestAnimationFrame(gameLoop);
+  }
+
+  function flap() {
+    if (gameState === 'playing') {
+      skull.vy = difficulty.flapStrength;
+    }
+  }
+
+  function startGame() {
+    startScreen.style.display = 'none';
+    gameOverScreen.style.display = 'none';
+    bestScore = bestScore || 0;
+    bestEl.textContent = 'Best: ' + bestScore;
+    initGame();
+    gameLoop();
+  }
+
+  function restartGame() {
+    cancelAnimationFrame(animId);
+    gameOverScreen.style.display = 'none';
+    initGame();
+    gameLoop();
+  }
+
+  function endGame() {
+    gameState = 'over';
+    cancelAnimationFrame(animId);
+    if (score > (bestScore || 0)) {
+      bestScore = score;
+      bestEl.textContent = 'Best: ' + bestScore;
+      bestMsgEl.textContent = '🏆 New best score!';
+    } else {
+      bestMsgEl.textContent = 'Best: ' + (bestScore || 0);
+    }
+    finalScoreEl.textContent = score;
+    gameOverScreen.style.display = 'block';
+  }
+
+  // Input
+  document.addEventListener('keydown', e => {
+    if (e.code === 'Space') { e.preventDefault(); flap(); }
+  });
+  canvas.addEventListener('click', flap);
+  canvas.addEventListener('touchstart', e => { e.preventDefault(); flap(); }, { passive: false });
+
+  // Draw idle frame
+  (function idleDraw() {
+    frameCount = 0;
+    drawBackground();
+    drawSkull(90, canvas.height/2, 26, 0);
+  })();
+</script>
+</body>
+</html>

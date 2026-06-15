@@ -1,0 +1,316 @@
+/* ==============================================
+   spino.css — Custom stylesheet for Spinosaurus
+   IS 201 Final Project
+   ============================================== */
+
+/* --- 1. ROOT VARIABLES & RESET --- */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* --- 2. BODY & BACKGROUND --- */
+body {
+  font-family: 'Georgia', 'Times New Roman', serif;
+  background-color: #1C1208;
+  color: #E8DFC8;
+  line-height: 1.7;
+}
+
+/* --- 3. SITE HEADER --- */
+#site-header {
+  background-image: linear-gradient(to bottom, rgba(10,6,2,0.85), rgba(28,18,8,0.95)),
+    url('https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Spinosaurus_life_restoration.png/1200px-Spinosaurus_life_restoration.png');
+  background-size: cover;
+  background-position: center;
+  background-color: #0a0602;
+  padding: 5rem 2rem 3rem;
+  text-align: center;
+  border-bottom: 3px solid #8B5E1A;
+}
+
+#header-inner {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+/* --- 4. TITLE TYPOGRAPHY --- */
+#main-title {
+  font-family: 'Georgia', serif;
+  font-size: 5rem;
+  font-weight: bold;
+  letter-spacing: 0.25em;
+  color: #D4941A;
+  text-shadow: 0 0 40px rgba(212, 148, 26, 0.4), 2px 2px 8px rgba(0,0,0,0.8);
+  margin-bottom: 0.4rem;
+}
+
+#main-subtitle {
+  font-family: 'Georgia', serif;
+  font-style: italic;
+  font-size: 1.15rem;
+  color: #A89060;
+  letter-spacing: 0.08em;
+  margin-bottom: 2rem;
+}
+
+/* --- 5. NAVIGATION --- */
+#main-nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem 1.5rem;
+  margin-top: 1.5rem;
+}
+
+#main-nav a {
+  font-family: 'Arial', sans-serif;
+  font-size: 0.8rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #C4883A;
+  text-decoration: none;
+  padding: 0.35rem 0.75rem;
+  border: 1px solid rgba(196, 136, 58, 0.3);
+  border-radius: 2px;
+  transition: background 0.2s, color 0.2s;
+}
+
+#main-nav a:hover {
+  background-color: #8B5E1A;
+  color: #F2E8D0;
+}
+
+/* --- 6. CONTENT SECTIONS --- */
+.content-section {
+  padding: 4.5rem 2rem;
+}
+
+.alt-bg {
+  background-color: #120D06;
+}
+
+.section-inner {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+/* --- 7. HEADINGS --- */
+.section-heading {
+  font-family: 'Georgia', serif;
+  font-size: 2.2rem;
+  color: #D4941A;
+  border-bottom: 2px solid #4a3010;
+  padding-bottom: 0.6rem;
+  margin-bottom: 1.5rem;
+}
+
+.sub-heading {
+  font-family: 'Georgia', serif;
+  font-size: 1.2rem;
+  color: #C4883A;
+  margin: 1.5rem 0 0.5rem;
+}
+
+/* --- 8. BODY TEXT --- */
+.body-text {
+  font-family: 'Georgia', serif;
+  font-size: 1rem;
+  color: #D4C8A8;
+  line-height: 1.85;
+  margin-bottom: 1rem;
+}
+
+/* --- 9. ORDERED LIST WITH NESTED UNORDERED LIST --- */
+.ordered-facts {
+  margin: 1.5rem 0;
+  padding-left: 1.5rem;
+  counter-reset: fact-counter;
+}
+
+.ordered-facts > li {
+  font-family: 'Arial', sans-serif;
+  font-size: 1rem;
+  color: #C4883A;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  list-style-type: decimal;
+}
+
+.nested-list {
+  list-style-type: disc;
+  margin: 0.4rem 0 0.4rem 1.5rem;
+}
+
+.nested-list li {
+  font-family: 'Georgia', serif;
+  font-size: 0.92rem;
+  color: #D4C8A8;
+  font-weight: normal;
+  margin-bottom: 0.2rem;
+}
+
+/* --- 10. ANATOMY GRID DIV --- */
+#anatomy-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2.5rem;
+  align-items: start;
+}
+
+/* --- 11. IMAGE STYLES --- */
+.dino-image {
+  width: 100%;
+  border-radius: 4px;
+  border: 2px solid #4a3010;
+  display: block;
+}
+
+.img-caption {
+  font-family: 'Arial', sans-serif;
+  font-size: 0.75rem;
+  color: #7A6A4A;
+  font-style: italic;
+  margin-top: 0.5rem;
+  line-height: 1.5;
+}
+
+/* --- 12. HABITAT CARDS DIV --- */
+#habitat-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.habitat-card {
+  background-color: rgba(255,255,255,0.04);
+  border: 1px solid #4a3010;
+  border-radius: 4px;
+  padding: 1.4rem;
+}
+
+.habitat-card h4 {
+  font-family: 'Georgia', serif;
+  font-size: 1rem;
+  color: #D4941A;
+  margin-bottom: 0.6rem;
+}
+
+.habitat-card p {
+  font-family: 'Georgia', serif;
+  font-size: 0.88rem;
+  color: #B8A880;
+  line-height: 1.7;
+}
+
+/* --- 13. VIDEO WRAPPER DIV --- */
+#video-wrapper {
+  margin-top: 1.5rem;
+  border: 2px solid #4a3010;
+  border-radius: 4px;
+  overflow: hidden;
+  background: #000;
+}
+
+/* --- 14. TABLEAU WRAPPER DIV --- */
+#tableau-wrapper {
+  margin-top: 1.5rem;
+  border: 2px solid #4a3010;
+  border-radius: 4px;
+  overflow: hidden;
+  min-height: 300px;
+  background: #0f0a04;
+  padding: 1rem;
+}
+
+.tableauPlaceholder {
+  width: 100%;
+}
+
+/* --- 15. GAME BUTTON --- */
+#play-btn {
+  display: inline-block;
+  padding: 1rem 2.5rem;
+  background-color: #8B5E1A;
+  color: #F2E8D0;
+  font-family: 'Arial', sans-serif;
+  font-size: 1rem;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+  border-radius: 4px;
+  border: 2px solid #D4941A;
+  transition: background-color 0.2s, transform 0.15s;
+}
+
+#play-btn:hover {
+  background-color: #D4941A;
+  color: #1C1208;
+  transform: scale(1.04);
+}
+
+/* --- 16. ANATOMY TEXT BLOCK DIV --- */
+.anatomy-text {
+  padding-left: 1rem;
+}
+
+/* --- 17. ANATOMY CARD DIV --- */
+.anatomy-card {
+  display: flex;
+  flex-direction: column;
+}
+
+/* --- 18. BACK TO TOP BAR --- */
+#back-to-top-bar {
+  background-color: #0a0602;
+  border-top: 1px solid #4a3010;
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#back-to-top,
+#back-to-portfolio {
+  font-family: 'Arial', sans-serif;
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #8B5E1A;
+  text-decoration: none;
+}
+
+#back-to-top:hover,
+#back-to-portfolio:hover {
+  color: #D4941A;
+}
+
+/* --- 19. FOOTER --- */
+#site-footer {
+  background-color: #080502;
+  text-align: center;
+  padding: 1.2rem;
+}
+
+#site-footer p {
+  font-family: 'Arial', sans-serif;
+  font-size: 0.75rem;
+  color: #4a3a20;
+  letter-spacing: 0.08em;
+}
+
+/* --- 20. RESPONSIVE --- */
+@media (max-width: 680px) {
+  #main-title {
+    font-size: 2.8rem;
+  }
+
+  #anatomy-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .anatomy-text {
+    padding-left: 0;
+  }
+}
